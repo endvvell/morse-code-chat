@@ -3,7 +3,7 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { Circle, Close, HorizontalRule, Visibility, VisibilityOff } from '@mui/icons-material/';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { registerUser } from '../features/userInfoFeatures/userInfoStateSlice';
+import { clearRegisterError, registerUser } from '../features/userInfoFeatures/userInfoStateSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -14,7 +14,7 @@ const RegisterPage: React.FC = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch<any>()
 
-    const { userInfo } = useSelector((state: RootState) => state.userInfo)
+    const { userInfo, auxiliaryState } = useSelector((state: RootState) => state.userInfo)
 
     const [username, setUsername] = useState<string>('')
     const [usernameError, setUsernameError] = useState<string>('')
@@ -37,7 +37,7 @@ const RegisterPage: React.FC = () => {
         if (renderCount.current > 2) {
             if (username.length < 3) {
                 setUsernameError('Username must be more than 3 characters long')
-            } else if (username.match(/([^!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]*[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~])/)) {
+            } else if (username.match(/([^!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]*[!"#$%&'()*+,-.:\s;<=>?@[\]^_`{|}~])/)) {
                 setUsernameError('Username must not contain any special characters')
             } else {
                 setUsernameError('')
@@ -61,6 +61,17 @@ const RegisterPage: React.FC = () => {
     }, [password])
 
 
+    useEffect(() => {
+        setSubmitBtnTimeout(Boolean(auxiliaryState.submitButtonTimeout))
+    }, [auxiliaryState.submitButtonTimeout])
+
+    useEffect(() => {
+        if (auxiliaryState.serverRegisterError) {
+            setServerError(auxiliaryState.serverRegisterError.toString())
+        }
+    }, [auxiliaryState.serverRegisterError])
+
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -70,6 +81,7 @@ const RegisterPage: React.FC = () => {
     };
 
     const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
+        dispatch(clearRegisterError())
         setServerError('')
     }
 
@@ -87,6 +99,11 @@ const RegisterPage: React.FC = () => {
         </>
     )
 
+    useEffect(() => {
+        return () => {
+            dispatch(clearRegisterError())
+        }
+    }, [])
 
     return (
         <Box sx={{

@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client'
 
-const serverURL: string = "http://localhost:3003"
+const serverURL: string = "http://svitanok.xyz"
 const socket: Socket = io(serverURL, { autoConnect: false })
 
 // for debug only

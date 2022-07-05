@@ -21,7 +21,9 @@ export interface userInfoInitState {
     },
 
     auxiliaryState: {
-        [key: string]: boolean | string,
+        submitButtonTimeout: boolean, 
+        serverLoginError: string,
+        serverRegisterError: string,
     }
 }
 
@@ -109,7 +111,8 @@ export const userInfoSlice = createSlice({
         },
         auxiliaryState: {
             submitButtonTimeout: false,
-            serverError: '',
+            serverRegisterError: '',
+            serverLoginError: '',
         }
     } as userInfoInitState,
     reducers: {
@@ -122,19 +125,32 @@ export const userInfoSlice = createSlice({
             state.userInfo.username = null
             state.userInfo.token = null
             state.userInfo.role = null
-            state.auxiliaryState.submitButtonTimeout = false
+            state.auxiliaryState = {
+                submitButtonTimeout: false,
+                serverRegisterError: '',
+                serverLoginError: '',
+            }
         },
 
         connectToWebSocket: (state) => {
             socket.auth = { client: { user_id: state.userInfo.user_id, username: state.userInfo.username, token: state.userInfo.token } }
             socket.connect()
-        }
+        },
+
+        clearLoginError: (state) => {
+            state.auxiliaryState.serverLoginError = ''
+        },
+
+        clearRegisterError: (state) => {
+            state.auxiliaryState.serverRegisterError = ''
+        },
+        
     },
     extraReducers: (builder) => {
         builder
             // user login
             .addCase(loginUser.pending, (state) => {
-                state.auxiliaryState.serverError = ''
+                state.auxiliaryState.serverLoginError = ''
                 state.auxiliaryState.submitButtonTimeout = true
             })
             .addCase(loginUser.fulfilled, (state, action) => {
@@ -155,9 +171,9 @@ export const userInfoSlice = createSlice({
                 state.auxiliaryState.submitButtonTimeout = false
 
                 if (action.payload && action.payload.response && action.payload.response.data) {
-                    state.auxiliaryState.serverError = action.payload.response.data.error ? action.payload.response.data.error : action.payload.message
+                    state.auxiliaryState.serverLoginError = action.payload.response.data.error ? action.payload.response.data.error : action.payload.message
                 } else {
-                    state.auxiliaryState.serverError = 'There was an error, please try again later.'
+                    state.auxiliaryState.serverLoginError = 'There was an error, please try again later.'
                 }
             })
 
@@ -165,7 +181,7 @@ export const userInfoSlice = createSlice({
 
             // user register
             .addCase(registerUser.pending, (state) => {
-                state.auxiliaryState.serverError = ''
+                state.auxiliaryState.serverRegisterError = ''
                 state.auxiliaryState.submitButtonTimeout = true
             })
             .addCase(registerUser.fulfilled, (state, action) => {
@@ -184,9 +200,9 @@ export const userInfoSlice = createSlice({
                 state.auxiliaryState.submitButtonTimeout = false
 
                 if (action.payload && action.payload.response && action.payload.response.data) {
-                    state.auxiliaryState.serverError = action.payload.response.data.error ? action.payload.response.data.error : action.payload.message
+                    state.auxiliaryState.serverRegisterError = action.payload.response.data.error ? action.payload.response.data.error : action.payload.message
                 } else {
-                    state.auxiliaryState.serverError = 'There was an error, please try again later.'
+                    state.auxiliaryState.serverRegisterError = 'There was an error, please try again later.'
                 }
             })
     }
@@ -195,5 +211,7 @@ export const userInfoSlice = createSlice({
 
 export const {
     userLogout,
+    clearLoginError,
+    clearRegisterError,
     connectToWebSocket,
 } = userInfoSlice.actions

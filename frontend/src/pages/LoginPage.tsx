@@ -3,7 +3,7 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import { Circle, Close, HorizontalRule, Visibility, VisibilityOff } from '@mui/icons-material/';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { loginUser } from '../features/userInfoFeatures/userInfoStateSlice';
+import { clearLoginError, loginUser } from '../features/userInfoFeatures/userInfoStateSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -40,6 +40,7 @@ const LoginPage: React.FC = () => {
     };
 
     const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
+        dispatch(clearLoginError())
         setServerError('')
     }
 
@@ -48,13 +49,25 @@ const LoginPage: React.FC = () => {
         dispatch(loginUser({ username: username, password: password }))
     }
 
+    
     useEffect(() => {
         setSubmitBtnTimeout(Boolean(auxiliaryState.submitButtonTimeout))
     }, [auxiliaryState.submitButtonTimeout])
 
+
     useEffect(() => {
-        setServerError(auxiliaryState.serverError.toString())
-    }, [auxiliaryState.serverError])
+        if (auxiliaryState.serverLoginError) {
+            setServerError(auxiliaryState.serverLoginError.toString())
+        }
+    }, [auxiliaryState.serverLoginError])
+
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearLoginError())
+        }    
+    }, [])
+
 
     const snakbarAction = (
         <>
