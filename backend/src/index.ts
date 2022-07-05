@@ -146,7 +146,7 @@ socketServer.use(async (socket, next) => {
 
 
 socketServer.on('connection', async (socket) => {
-    /// @ts-ignore -- TS notes that "username" prop and other socket io library exposed functions doesn't exist on internal library type, couldn't fix by extending that type with a new interface with that prop and assigning it to the "socket" prop above, don't feel like this should be given time to be properly typed, so I'm ignoring it.
+    /// @ts-ignore -- TS notes that "username" prop and other socket io library exposed functions do not exist on internal library type, couldn't fix by extending that type with a new interface with that prop and assigning it to the "socket" prop above, don't feel like this should be given time to be properly typed, so I'm ignoring it.
     socket.client_id = socket.handshake.auth.client.user_id
     /// @ts-ignore
     socket.username = socket.handshake.auth.client.username
