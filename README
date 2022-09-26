@@ -1,3 +1,5 @@
+A mourse code chat app built on pure Node.js (no backend frameworks) and React (MUI, Redux)
+
 If you will be testing the functionality of the code on your machine:
 
 * Add appropriate values in backend/config.ts,
