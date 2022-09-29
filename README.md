@@ -14,6 +14,8 @@ If you will be testing the functionality of the code on your machine:
 -- $ create database <some_new_db_name> with owner admin;  <--- if you want to specify a different user, you'll have to change permissions for the restored db, since that one has "admin" as its owner
 -- $ psql <some_new_db_name> < restore_backup.sql
 
+(If you choose "Newbie" as a user role while registering then you will be able to click the "eye/see" icon to decrypt the encoded morse code message)
+
 Login:
 ![login page](https://github.com/svitan0k/infotech-test-prj/blob/master/preview/2022-09-26_20-59.png?raw=true)
 
