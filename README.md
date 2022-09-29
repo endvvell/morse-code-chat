@@ -1,6 +1,6 @@
 A morse code chat app built on pure Node.js (no backend frameworks) and React (MUI, Redux)
 
-(This was written some time ago, so it might not follow best practices or any architectural pattern(like "avoiding callback hell" style of promises writing, for one..)
+(This was written some time ago, so it might not follow best practices or any architectural patterns(like "avoiding callback hell" style of promises writing, for one..)
 
 If you will be testing the functionality of the code on your machine:
 
