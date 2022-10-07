@@ -1,4 +1,4 @@
-A morse code chat app built on pure Node.js (no backend frameworks) and React (MUI, Redux)
+A morse code chat app built on pure Node.js (no backend frameworks), React (MUI, Redux) and WebSockets.
 
 (This was written some time ago, so it might not follow best practices or any architectural patterns(like "avoiding callback hell" style of promises writing, for one..)
 
